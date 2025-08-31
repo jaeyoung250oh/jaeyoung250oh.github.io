@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Air Quality Heatmap</title>
+    <style>
+        #map { height: 100%; }
+        html, body { height: 100%; margin: 0; padding: 0; }
+        #heatmapButton {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 5;
+            background-color: #fff;
+            padding: 10px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            font-family: Arial, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <button id="heatmapButton">Generate Heatmap</button>
+    <div id="map"></div>
+
+    <script>
+        let map;
+        let heatmap;
+
+        function initMap() {
+            const denver = { lat: 39.7392, lng: -104.9903 };
+            
+            map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 12,
+                center: denver,
+            });
+
+            document.getElementById("heatmapButton").addEventListener("click", generateHeatmap);
+        }
+
+        async function generateHeatmap() {
+            console.log("Generating heatmap...");
+            const mapBounds = map.getBounds();
+            const ne = mapBounds.getNorthEast(); // NorthEast corner
+            const sw = mapBounds.getSouthWest(); // SouthWest corner
+
+            const dataPoints = [];
+            const promises = [];
+            
+            // Create a 10x10 grid of points within the map bounds
+            for (let i = 0; i < 10; i++) {
+                for (let j = 0; j < 10; j++) {
+                    const lat = sw.lat() + (ne.lat() - sw.lat()) * i / 9;
+                    const lng = sw.lng() + (ne.lng() - sw.lng()) * j / 9;
+                    
+                    // Fetch data for each point
+                    promises.push(getAirQuality(lat, lng));
+                }
+            }
+
+            // Wait for all API calls to complete
+            const results = await Promise.all(promises);
+
+            results.forEach(result => {
+                if (result && result.indexes && result.indexes.length > 0) {
+                    const aqi = result.indexes[0].aqi;
+                    const location = new google.maps.LatLng(
+                        result.location.latitude,
+                        result.location.longitude
+                    );
+                    
+                    dataPoints.push({ location: location, weight: aqi });
+                }
+            });
+
+            // If a heatmap already exists, clear it
+            if (heatmap) {
+                heatmap.setMap(null);
+            }
+
+            // Create and display the new heatmap layer
+            heatmap = new google.maps.visualization.HeatmapLayer({
+                data: dataPoints,
+                map: map,
+            });
+            
+            // You can customize the heatmap's appearance
+            heatmap.set("radius", 40);
+            heatmap.set("opacity", 0.6);
+            
+            console.log(`Heatmap generated with ${dataPoints.length} points.`);
+        }
+
+        async function getAirQuality(lat, lng) {
+            const apiKey = 'AIzaSyA6XveRlujUXFnliyDuA2bU8nVoC4R1pzs; // Replace with your key
+            const endpoint = 'https://airquality.googleapis.com/v1/currentConditions:lookup';
+
+            try {
+                const response = await fetch(endpoint + `?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ location: { latitude: lat, longitude: lng } })
+                });
+                if (!response.ok) return null;
+                return await response.json();
+            } catch (error) {
+                return null;
+            }
+        }
+    </script>
+    
+    <script async
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA6XveRlujUXFnliyDuA2bU8nVoC4R1pzs&callback=initMap&libraries=visualization&v=weekly">
+    </script>
+</body>
+</html>
