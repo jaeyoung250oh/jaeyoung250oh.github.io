@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Passive Drone Detection with COTS mmWave</title>
+  <style>
+    :root {
+      --bg: #ffffff;
+      --panel: #ffffff;
+      --ink: #202124;
+      --muted: #5f6368;
+      --accent: #3f51b5;
+      --accent2: #3949ab;
+      --ok: #1b8e4b;
+      --warn: #f57c00;
+      --bad: #d32f2f;
+      --card: #f8f9fb;
+      --border: #e0e0e0;
+    }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      font: 16px/1.6 "Segoe UI", Roboto, Oxygen, "Helvetica Neue", Arial, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+    }
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: white;
+      border-bottom: 1px solid var(--border);
+    }
+    .top-nav {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0.75rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .site-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .top-nav nav ul {
+      display: flex;
+      gap: 1.6rem;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      font-size: 0.95rem;
+    }
+    .top-nav nav a {
+      color: var(--muted);
+      font-weight: 500;
+      text-decoration: none;
+    }
+    .top-nav nav a:hover,
+    .top-nav nav a:focus {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 28px 20px 80px; }
+    header { display: grid; gap: 8px; margin-bottom: 18px; }
+    header h1 { font-size: 2.1rem; margin: 0; letter-spacing: 0.2px; }
+    header p { margin: 0; color: var(--muted); }
+    .page-nav {
+      position: sticky; top: 64px;
+      background: rgba(255,255,255,0.95); border-bottom: 1px solid var(--border);
+      z-index: 20; backdrop-filter: blur(6px);
+    }
+    .nav-inner { max-width: 1100px; margin: 0 auto; display: flex; gap: 14px; padding: 10px 20px; flex-wrap: wrap; }
+    .page-nav a { color: var(--muted); text-decoration: none; padding: 6px 10px; border-radius: 8px; }
+    .page-nav a:hover { color: var(--accent); background: #eef1fb; }
+    section { margin: 40px 0; }
+    h2 { font-size: 1.6rem; margin: 0 0 10px; }
+    h3 { font-size: 1.1rem; margin: 20px 0 8px; color: var(--accent); }
+    .grid { display: grid; gap: 14px; }
+    .cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    @media (max-width: 900px){ .cols-2, .cols-3 { grid-template-columns: 1fr; } }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 16px; box-shadow: 0 10px 20px rgba(0,0,0,0.06); }
+    .lead { color: var(--muted); }
+    .pill { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; border: 1px solid var(--border); background: #eef1fb; color: var(--accent); font-size: 12px; }
+    .kpi { font-size: 1.8rem; font-weight: 700; color: var(--accent2); }
+    .kpi small { font-size: 0.9rem; color: var(--muted); font-weight: 400; }
+    .code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; color: #1e293b; background: #f3f4f7; border: 1px solid var(--border); border-radius: 12px; padding: 14px; overflow: auto; }
+    .table { width: 100%; border-collapse: collapse; border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+    .table th, .table td { padding: 10px 12px; border-bottom: 1px solid var(--border); }
+    .table th { text-align: left; color: var(--muted); font-weight: 600; background: #f1f3f8; }
+    .badge { padding: 2px 6px; border-radius: 6px; font-size: 12px; border: 1px solid var(--border); }
+    .ok { color: var(--ok); border-color: rgba(27,142,75,0.3); background: rgba(27,142,75,0.08); }
+    .warn { color: var(--warn); border-color: rgba(245,124,0,0.3); background: rgba(245,124,0,0.08); }
+    .bad { color: var(--bad); border-color: rgba(211,47,47,0.3); background: rgba(211,47,47,0.08); }
+    footer { margin-top: 50px; color: var(--muted); border-top: 1px solid var(--border); padding-top: 18px; }
+    .callout { border-left: 3px solid var(--accent); padding: 12px 14px; background: #eef1fb; border-radius: 10px; }
+    .tag { display:inline-block; margin-right:8px; margin-bottom: 8px; padding:4px 10px; border:1px solid var(--border); border-radius:999px; font-size:12px; color:var(--muted); background: #f5f7fb; }
+    .hero { background: #f5f7fb; border:1px solid var(--border); border-radius: 18px; padding: 22px; }
+
+    .figure-block {
+      margin: 32px 0;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--panel);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.06);
+      overflow: hidden;
+    }
+
+    .figure-block img {
+      width: 100%;
+      display: block;
+    }
+
+    .figure-block.compact {
+      max-width: 340px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .figure-caption {
+      font-size: 0.85rem;
+      color: var(--muted);
+      padding: 12px 16px;
+      text-align: center;
+    }
+
+    .figure-gallery {
+      display: grid;
+      gap: 18px;
+      margin: 28px 0;
+    }
+
+    .figure-gallery.two {
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+
+    .figure-gallery.three {
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+
+    .figure-gallery figure {
+      margin: 0;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--panel);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .figure-gallery img {
+      width: 100%;
+      display: block;
+    }
+
+    .figure-gallery .figure-caption {
+      padding: 12px 14px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="site-header">
+    <div class="top-nav">
+      <div class="site-title">Junho Oh</div>
+      <nav>
+        <ul>
+          <li><a href="../index.html#about">About</a></li>
+          <li><a href="../index.html#meistsingers">Meistsingers</a></li>
+          <li><a href="../index.html#cross-country">Cross Country</a></li>
+          <li><a href="../index.html#science-research">Science Research</a></li>
+          <li><a href="../index.html#philosophy-club">Philosophy Club</a></li>
+          <li><a href="../index.html#summer-intern">Summer Intern</a></li>
+          <li><a href="../index.html#leadership-program">Leadership Program</a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+  <!-- <nav class="page-nav">
+    <div class="nav-inner">
+      <a href="#summary">Summary</a>
+      <a href="#overview">System Overview</a>
+      <a href="#pipeline">Signal Pipeline</a>
+      <a href="#classification">Antenna Pattern Classification</a>
+      <a href="#aoa">Angle (AoA) Estimation</a>
+      <a href="#experiments">Experiments & Results</a>
+      <a href="#discussion">Discussion</a>
+    </div>
+  </nav> -->
+  <div class="wrap">
+    <header class="hero">
+      <div class="pill">📶 mmWave · Passive Drone Detection · COTS devices</div>
+      <h1>Passive Drone Detection with COTS mmWave</h1>
+      <p class="lead">Goal: detect small consumer drones opportunistically using commodity mmWave radios and beam patterns (no active radar).
+      </p>
+      <div style="margin-top:10px">
+        <span class="tag">#passive-sensing</span>
+        <span class="tag">#mmwave</span>
+        <span class="tag">#beamforming</span>
+        <span class="tag">#rf-fingerprinting</span>
+        <span class="tag">#knn</span>
+      </div>
+    </header>
+
+    <section id="summary">
+      <h2>Summary</h2>
+      <div class="grid cols-3">
+        <div class="card">
+          <div class="kpi">92.4% <small>accuracy</small></div>
+          <p class="lead">KNN classification using top-6 receiver-antenna amplitude indices under quasi‑omnidirectional receive pattern.</p>
+        </div>
+        <div class="card">
+          <div class="kpi">≈ 5° <small>error</small></div>
+          <p class="lead">Non‑LOS angle estimation error using relationship between predefined beam patterns and received SNR.</p>
+        </div>
+        <div class="card">
+          <div class="kpi">Passive <small>operation</small></div>
+          <p class="lead">Leverages ambient transmissions; detects drone‑induced beam pattern changes caused by rotor vibration (frequency & phase).
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="overview">
+      <h2>System Overview</h2>
+      <div class="grid cols-2">
+        <div class="card">
+          <h3>Problem</h3>
+          <p>Small drones often evade conventional radar due to their low radar cross section and complex micro‑Doppler signatures. We target a <strong>passive</strong> solution using commodity mmWave (COTS) devices.</p>
+          <h3>Key Idea</h3>
+          <p>Drone rotor vibration perturbs the reflected beam pattern. These perturbations shift <em>which</em> receiver antennas have the highest amplitudes, producing a robust pattern usable as a fingerprint.</p>
+        </div>
+        <div class="card">
+          <h3>Sensing Modalities</h3>
+          <ul>
+            <li><strong>Receiver antenna index pattern:</strong> sort receive antennas by amplitude; use top‑k indices as features.</li>
+            <li><strong>Beam/SNR relation:</strong> map predefined transmit/receive beam weights (complex) to measured channel/SNR to estimate AoA.</li>
+            <li><strong>Temporal signature:</strong> iFFT / time‑domain analysis to capture periodic vibration effects.</li>
+          </ul>
+          <p class="lead">We avoid specialized hardware by using available beam codebooks and channel measurements in COTS devices.</p>
+        </div>
+      </div>
+      <!-- <div class="figure-block">
+        <img src="img/image2.png" alt="Workflow diagram showing WiFi AD connection and beam-pattern update loop">
+        <div class="figure-caption">High-level workflow: connect over WiFi AD, capture received signals, and iteratively update beam patterns before classifying vibration signatures.</div>
+      </div> -->
+    </section>
+
+    <section id="pipeline">
+      <h2>Signal Processing Pipeline</h2>
+      <div class="grid cols-2">
+        <div class="card">
+          <ol>
+            <li><strong>Acquisition:</strong> Sweep over predefined beam patterns; record complex channel status <code>R_s</code> per beam/antenna.</li>
+            <li><strong>Pre‑conditioning:</strong> Normalize amplitude/phase; optional denoising; form antenna amplitude matrix.</li>
+            <li><strong>Time‑domain view:</strong> Apply <code>iFFT</code> on selected subcarriers to expose periodic components from rotor vibration.</li>
+            <li><strong>Feature extraction:</strong> (a) <em>Top‑k antenna indices</em>; (b) <em>beam–SNR relation</em> statistics; (c) vibration frequency estimate.</li>
+            <li><strong>Inference:</strong> K‑Nearest Neighbors for detection; AoA via beam pattern–SNR matching.</li>
+          </ol>
+        </div>
+        <div class="card">
+          <h3>Pseudocode</h3>
+          <pre class="code"># Antenna-index features for detection
+X = []  # feature vectors
+for snapshot in sweep_logs:  # one sweep = all beams x antennas
+    amps = antenna_amplitudes(snapshot)              # |A_rx| per antenna
+    idx_sorted = argsort_desc(amps)[:6]              # top-6 indices
+    vib = rotor_vibration_ifft(snapshot)             # optional scalar(s)
+    X.append(concat(idx_sorted, vib))
+
+# Train/evaluate KNN
+knn = KNN(k=3, metric="hamming")  # indices act like categorical tokens
+knn.fit(X_train, y_train)
+acc = knn.score(X_test, y_test)
+
+# AoA estimation by beam–SNR relation
+# Given predefined complex beam weights A (codebook) and measured Rs
+AoA = argmax_theta( similarity( A(theta), Rs_measured ) )</pre>
+        </div>
+      </div>
+      <!-- <div class="figure-block compact">
+        <img src="img/image0.png" alt="iFFT-based drone detection slides showing amplitude patterns and fan speed experiments">
+        <div class="figure-caption">iFFT-derived time-domain signatures expose LoS/NLoS peaks and how fan speed alters receiver-antenna amplitude patterns used for detection.</div>
+      </div> -->
+    </section>
+
+    <section id="classification">
+      <h2>Receiver Antenna Pattern Classification</h2>
+      <div class="grid cols-2">
+        <div class="card">
+          <h3>Feature: Top‑6 Receiver Antenna Indices</h3>
+          <ul>
+            <li>Receiver uses quasi‑omnidirectional pattern.</li>
+            <li>From each snapshot, collect the <strong>six highest‑amplitude</strong> antenna indices.</li>
+            <li>Induced by drone vibration, the identity/order of top‑k indices changes in a class‑specific way.</li>
+          </ul>
+          <p class="lead"><strong>Classifier:</strong> KNN (Hamming distance over index tuples). Reported accuracy: <strong>92.4%</strong>.</p>
+        </div>
+        <div class="card">
+          <h3>Fan‑Speed Ablation (Proxy for Vibration)</h3>
+          <table class="table">
+            <thead>
+              <tr><th>Condition</th><th>Expectation</th><th>Status</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Fan off</td><td>Baseline antenna index distribution</td><td><span class="badge ok">collected</span></td></tr>
+              <tr><td>Fan on: low speed</td><td>Moderate index shifts, lower frequency</td><td><span class="badge ok">observed</span></td></tr>
+              <tr><td>Fan on: high speed</td><td>Stronger shifts, higher frequency</td><td><span class="badge ok">observed</span></td></tr>
+            </tbody>
+          </table>
+          <p class="lead">These ablations validate sensitivity to rotor‑like vibration without requiring an actual drone in early stages.</p>
+        </div>
+      </div>
+      <div class="figure-gallery two">
+        <!-- <figure>
+          <img src="img/image1.png" alt="Drone detection experiment summary with classification metrics">
+          <figcaption class="figure-caption">Summary slide highlighting fan-speed trials, receiver-index patterns, and overall KNN performance.</figcaption>
+        </figure> -->
+        <figure>
+          <img src="img/image6.png" alt="Confusion matrix for fan-speed classification using KNN">
+          <figcaption class="figure-caption">Confusion matrix illustrating how the classifier differentiates between fan-off, low-speed, and high-speed vibration signatures.</figcaption>
+        </figure>
+        <figure>
+            <img src="img/image5.png" alt="Experiment geometry depicting transmitter, receiver, and rotating fan target" style="width: 53%; height: auto; margin: 0 auto;">
+            <figcaption class="figure-caption">Experimental geometry: transmitter (TX) and receiver (RX) positioned around the vibrating target to capture beam-pattern perturbations.</figcaption>
+        </figure>
+      </div>
+      <!-- <div class="figure-block compact">
+        <img src="img/image3.png" alt="Fan speed labels used in the experiment">
+        <div class="figure-caption">Legend used across the study to denote fan-off, low-speed, and high-speed operating points.</div>
+      </div> -->
+    </section>
+
+    <section id="aoa">
+      <h2>Angle (AoA) Estimation</h2>
+      <div class="grid cols-2">
+        <div class="card">
+          <h3>Beam/SNR Relationship</h3>
+          <p>Let <code>A</code> be the complex predefined beam weights and <code>R_s</code> the measured complex channel per beam. The received SNR varies systematically with the beam steered angle. We search for the AoA that maximizes a similarity score between <code>A(θ)</code> and <code>R_s</code>.</p>
+          <ul>
+            <li>3 geometry cases: object near station; mid‑point; near AP.</li>
+            <li>Reported non‑LOS angle error ≈ <strong>5°</strong>.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Estimator Sketch</h3>
+          <pre class="code">def estimate_aoa(A_codebook, R_meas, thetas):
+    # A_codebook: dict[theta] -> complex weight vector
+    # R_meas: measured complex response vector
+    best_theta, best_score = None, -1e9
+    for th in thetas:
+        score = real(dot(conj(A_codebook[th]), R_meas)) / (norm(A_codebook[th]) * norm(R_meas) + 1e-9)
+        if score > best_score:
+            best_theta, best_score = th, score
+    return best_theta</pre>
+          <p class="lead">Alternative scores: magnitude correlation, phase‑aware cosine similarity, or learned mapping.</p>
+        </div>
+      </div>
+      <!-- <div class="figure-gallery two">
+        <figure>
+          <img src="img/image5.png" alt="Experiment geometry depicting transmitter, receiver, and rotating fan target">
+          <figcaption class="figure-caption">Experimental geometry: transmitter (TX) and receiver (RX) positioned around the vibrating target to capture beam-pattern perturbations.</figcaption>
+        </figure>
+        <figure>
+          <img src="img/image4.png" alt="Angle estimation heatmaps across three spatial cases">
+          <figcaption class="figure-caption">Angle estimation results across three spatial cases; peaks align within roughly five degrees of ground-truth AoA.</figcaption>
+        </figure>
+      </div> -->
+    </section>
+
+    <section id="experiments">
+      <h2>Experiments & Results</h2>
+      <div class="grid cols-3">
+        <div class="card">
+          <h3>Setup</h3>
+          <ul>
+            <li>COTS mmWave devices with beam codebook support.</li>
+            <li>Receiver in quasi‑omni mode; sweep across beams.</li>
+            <li>Collect complex channel per beam/antenna snapshot.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Detection</h3>
+          <p>Top‑6 index features + KNN → <strong>92.4%</strong> accuracy. Robust to low‑/high‑speed vibration conditions.</p>
+          <p class="lead"><span class="badge ok">Result</span> Consistent class separation via antenna index permutations.</p>
+        </div>
+        <div class="card">
+          <h3>Localization</h3>
+          <p>Beam/SNR relation yields AoA with ≈ <strong>5°</strong> error in NLOS scenarios across three spatial cases.</p>
+          <p class="lead"><span class="badge warn">Note</span> Error is geometry‑dependent; multipath may increase bias.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="discussion">
+      <h2>Discussion</h2>
+      <div class="grid cols-2">
+        <div class="card">
+          <h3>Strengths</h3>
+          <ul>
+            <li>Passive: no dedicated radar transmitter required.</li>
+            <li>Commodity hardware: leverages existing beam codebooks and CSI.</li>
+            <li>Simple features: antenna index tuples are lightweight and privacy‑preserving.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Limitations & Next Steps</h3>
+          <ul>
+            <li>Multipath sensitivity: index patterns can shift due to environmental changes.</li>
+            <li>Generalization: evaluate across devices, environments, and multiple drone models.</li>
+            <li>Fusion: combine index features with Doppler‑like temporal cues and phase statistics.</li>
+            <li>Learning: replace KNN with a compact sequence model for improved robustness.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="callout">
+        <strong>Reproducibility Tip:</strong> Log raw complex snapshots (per beam/antenna), store the top‑k index vectors and vibration features, and keep a simple JSON manifest (setup, geometry, labels) for quick ablations.
+      </div>
+    </section>
+
+    <footer>
+      <div>© 2025 Passive Drone Sensing Notes</div>
+      <div style="margin-top:6px">This page summarizes an internal concept/demo using mmWave COTS devices for drone detection and AoA estimation.</div>
+    </footer>
+  </div>
+</body>
+</html>

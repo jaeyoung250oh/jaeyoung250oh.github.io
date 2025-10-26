@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surface Condition Measurement for Runners Using Smartphone Sensors</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: white;
+            border-bottom: 1px solid #e0e0e0;
+            margin: -20px -20px 20px -20px;
+            padding: 0 20px;
+            font-family: "Segoe UI", Roboto, Oxygen, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        .top-nav {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0.75rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .site-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: #5f6368;
+        }
+
+        nav ul {
+            display: flex;
+            gap: 1.6rem;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            font-size: 0.95rem;
+        }
+
+        nav a {
+            color: #5f6368;
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        nav a:hover,
+        nav a:focus {
+            color: #3f51b5;
+            text-decoration: underline;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 60px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            line-height: 1.3;
+            color: #1a1a1a;
+        }
+
+        .authors {
+            font-size: 16px;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .affiliations {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+
+        .abstract {
+            background-color: #f9f9f9;
+            padding: 25px;
+            margin: 30px 0;
+            border-left: 4px solid #2c5aa0;
+        }
+
+        .abstract h2 {
+            font-size: 18px;
+            margin-bottom: 12px;
+            color: #2c5aa0;
+        }
+
+        .abstract p {
+            text-align: justify;
+        }
+
+        .keywords {
+            margin-top: 15px;
+            font-style: italic;
+            font-size: 14px;
+        }
+
+        .keywords strong {
+            font-style: normal;
+            font-weight: 600;
+        }
+
+        section {
+            margin: 35px 0;
+        }
+
+        h2 {
+            font-size: 22px;
+            margin: 30px 0 15px 0;
+            color: #2c5aa0;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        h3 {
+            font-size: 18px;
+            margin: 20px 0 10px 0;
+            color: #444;
+            font-weight: 600;
+        }
+
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        .figure {
+            margin: 30px 0;
+            padding: 20px;
+            background-color: #fafafa;
+            border: 1px solid #e0e0e0;
+            text-align: center;
+        }
+
+        .figure img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+            border: 1px solid #ddd;
+            background-color: white;
+        }
+
+        .figure-caption {
+            margin-top: 15px;
+            font-size: 14px;
+            font-style: italic;
+            color: #555;
+        }
+
+        .figure-placeholder {
+            background-color: #e8e8e8;
+            padding: 80px 20px;
+            color: #888;
+            font-size: 16px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 25px 0;
+            font-size: 14px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        table caption {
+            caption-side: top;
+            text-align: left;
+            font-weight: 600;
+            padding: 10px 0;
+            font-size: 15px;
+            color: #2c5aa0;
+        }
+
+        thead {
+            background-color: #2c5aa0;
+            color: white;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tbody tr:hover {
+            background-color: #f0f0f0;
+        }
+
+        .equation {
+            font-family: 'Courier New', monospace;
+            background-color: #f5f5f5;
+            padding: 15px;
+            margin: 20px 0;
+            border-left: 3px solid #2c5aa0;
+            overflow-x: auto;
+        }
+
+        .references {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .references h2 {
+            margin-bottom: 20px;
+        }
+
+        .reference-item {
+            margin-bottom: 12px;
+            padding-left: 30px;
+            text-indent: -30px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .reference-item a {
+            color: #2c5aa0;
+            text-decoration: none;
+        }
+
+        .reference-item a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 22px;
+            }
+
+            h2 {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="site-header">
+        <div class="top-nav">
+            <div class="site-title">Junho Oh</div>
+            <nav>
+                <ul>
+                    <li><a href="../index.html#about">About</a></li>
+                    <li><a href="../index.html#meistsingers">Meistsingers</a></li>
+                    <li><a href="../index.html#cross-country">Cross Country</a></li>
+                    <li><a href="../index.html#science-research">Science Research</a></li>
+                    <li><a href="../index.html#philosophy-club">Philosophy Club</a></li>
+                    <li><a href="../index.html#summer-intern">Summer Intern</a></li>
+                    <li><a href="../index.html#leadership-program">Leadership Program</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <div class="container">
+        <header>
+            <h1>Surface Condition Measurement for Runners Using Smartphone Sensors: Quantifying Runner-Surface Interactions</h1>
+            <div class="authors">
+                Junho Oh<sup>1</sup>, Jaeyoung Oh<sup>2</sup>
+            </div>
+            <div class="affiliations">
+                <sup>1</sup>CU Succeed, University of Colorado Denver<br>
+                <sup>2</sup>Department of Computer Science, University of Colorado Boulder
+            </div>
+        </header>
+
+        <div class="abstract">
+            <h2>Abstract</h2>
+            <p>
+                Current running platforms lack quantitative surface characterization despite its critical 
+                influence on performance and injury risk. We developed a smartphone-based method using 
+                ankle-mounted inertial sensors to measure runner-surface interactions through two metrics: 
+                the Runner-Perceived Hardness Index (RPHI) and the Runner-Perceived Traction Index 
+                (RPTI). Two runners performed a total of 19 analyzable trials across cement and snow 
+                surfaces. Results showed cement had a significantly higher RPHI (15.32±5.53 vs. 
+                1.94±1.12 m/s²) and a significantly lower RPTI (16.52±2.17 vs 25.00±3.35 m/s²) than snow. 
+                These findings validate the use of smartphones for real-time surface characterization, 
+                enabling data-driven training optimization previously limited to laboratory settings.
+            </p>
+            <div class="keywords">
+                <strong>KEYWORDS:</strong> running, surface, hardness, traction, safety, IMU, gyroscope.
+            </div>
+        </div>
+
+        <section id="introduction">
+            <h2>Introduction</h2>
+            <p>
+                Modern running platforms comprehensively track atmospheric conditions such as temperature, 
+                humidity, and wind, that influence performance (Ely et al., 2007; Vihma, 2010). However, 
+                these platforms cannot quantify surface conditions, which are critical factors that directly 
+                affect biomechanics, energy expenditure, and injury risk. Surface hardness determines the 
+                magnitude of impact forces, while traction governs propulsion efficiency and stability 
+                demands (Boey et al., 2017).
+            </p>
+            <p>
+                Smartphones equipped with inertial measurement units (IMUs) offer an opportunity to address 
+                this gap. Their accelerometers and gyroscopes can capture gait dynamics at sufficient 
+                sampling rates (Faisal et al., 2019). We leverage the IMU sensor to capture surface and 
+                runner interactions. This study aims to: (1) develop smartphone-based metrics for surface 
+                and runner interactions, (2) validate discrimination between surfaces with known mechanical 
+                differences, and (3) demonstrate the feasibility of real-time implementation.
+            </p>
+            <p>
+                We hypothesize that ankle-mounted smartphones can differentiate surfaces through impact 
+                patterns (hardness) and horizontal acceleration variability (traction) during running.
+            </p>
+        </section>
+
+        <section id="methods">
+            <h2>Methods</h2>
+            
+            <h3>Participants</h3>
+            <p>
+                Two recreational runners participated in this within-subject study after providing written 
+                informed consent. Participants 1 and 2 (both male) met the inclusion criteria of maintaining 
+                a weekly running volume of at least 20 km, reporting no lower extremity injuries within the 
+                preceding six months, and having regular experience running on varied surface types. 
+                Participant 1 was 17 years old, 178 cm tall, and weighed 70 kg, while Participant 2 was 50 
+                years old, 175 cm tall, and weighed 80 kg. The age difference provided insight into the 
+                potential generalizability of the results to other runner demographics.
+            </p>
+
+            <h3>Data Collection</h3>
+            <p>
+                Data collection employed an iPhone 14 containing a 6-axis inertial measurement unit with a 
+                tri-axial accelerometer capable of ±16g measurement range and 0.00024g resolution, alongside 
+                a tri-axial gyroscope with ±2000°/s range. The native 100 Hz sampling rate exceeded the 
+                Nyquist frequency required for capturing running dynamics, as gait frequencies typically 
+                remain below 3 Hz with harmonic content under 20 Hz. The device was secured to the outside 
+                of the right ankle with an adjustable neoprene strap and hook-and-loop fasteners.
+            </p>
+            <p>
+                Testing occurred on two contrasting surfaces selected to maximize mechanical differences. 
+                The cement surface consisted of a level concrete pathway with uniform texture and no visible 
+                cracks or irregularities. The snow surface comprised a level path covered with 1-10 cm of 
+                fresh snow, providing variable depth but consistent coverage. Environmental conditions 
+                remained stable throughout testing (temperature 2-5°C, no active precipitation, minimal wind).
+            </p>
+            <p>
+                Each participant completed ten trials per surface. The trials involved continuous locomotion 
+                along a straight path ranging from 10 to 20 meters, and participants were instructed to 
+                maintain their natural gait pattern at self-selected speeds ranging from walking to running. 
+                Depending on the selected speed, trial durations varied from 10 to 40 seconds, ensuring the 
+                capture of at least 15 to 20 gait cycles per trial. A 60-second rest interval between trials 
+                prevented fatigue accumulation.
+            </p>
+
+            <h3>Signal Processing</h3>
+            <p>
+                Raw sensor data underwent a multi-stage processing pipeline to extract biomechanically 
+                relevant metrics. The fundamental challenge was separating gravity-induced accelerations 
+                from motion-related accelerations given the constantly changing device orientation while 
+                running. We addressed this issue using a custom filter. The filter implementation integrated 
+                angular velocity measurements from the gyroscope to track changes in device orientation, 
+                while using accelerometer data to correct for integration drift.
+            </p>
+            <div class="equation">
+                θ(t) = α(θ(t-1) + ω·dt) + (1 − α)θ
+            </div>
+            <p>
+                where θ represents orientation, ω is angular velocity, dt is the sampling interval, and α 
+                is the weighting factor. We empirically determined that α = 0.98 provided an optimal balance 
+                between responsiveness and stability.
+            </p>
+            <p>
+                Following coordinate transformation to the Earth reference frame, vertical accelerations 
+                consistently aligned with gravitational direction regardless of device orientation. Gait 
+                event detection employed a peak-finding algorithm on the vertical acceleration signal. Foot 
+                strikes manifested as distinct peaks exceeding 12 m/s², a threshold determined through visual 
+                inspection of pilot data and validated against video recordings. To prevent multiple 
+                detections within a single stance phase, we enforced a minimum 300 ms separation between 
+                peaks, corresponding to maximum cadences of 200 steps/minute. Additional criteria included 
+                peak prominence exceeding 5 m/s² to eliminate noise-induced false positives.
+            </p>
+
+            <h3>Surface Characterization Metrics</h3>
+            <p>
+                Surface characterization metrics quantified biomechanical responses to different surfaces. 
+                The <strong>Runner-Perceived Hardness Index (RPHI)</strong> calculated mean net vertical 
+                acceleration across all detected foot strikes within a trial, subtracting gravitational 
+                acceleration (9.81 m/s²) to isolate impact-specific forces:
+            </p>
+            <div class="equation">
+                RPHI = Σ(peak_vertical_acc - 9.81) / number_footstrikes
+            </div>
+            <p>
+                The <strong>Runner-Perceived Traction Index (RPTI)</strong> computed mean peak horizontal 
+                acceleration magnitude during ground contact phases:
+            </p>
+            <div class="equation">
+                RPTI = Σ(max|horizontal_acc|) / number_contacts
+            </div>
+            <p>
+                These metrics provide intuitive interpretations where higher RPHI indicates harder surfaces 
+                and higher RPTI suggests lower traction.
+            </p>
+
+            <h3>Statistical Analysis</h3>
+            <p>
+                Descriptive statistics characterized central tendency and variability for each metric by 
+                surface type. Given the small sample size and potential variance differences between 
+                surfaces, we employed Welch's t-test for between-surface comparisons, which do not assume 
+                equal variances. Effect sizes were calculated using Cohen's d with pooled standard deviation, 
+                interpreting d > 0.8 as large effects. All analyses used Python 3.9 with NumPy 1.21.0 and 
+                SciPy 1.7.0. Statistical significance was set at p < 0.05.
+            </p>
+        </section>
+
+        <section id="results">
+            <h2>Results</h2>
+            <p>
+                Data processing yielded 19 analyzable trials from the 20 that were collected. One cement 
+                trial was excluded due to sensor displacement. The final dataset included eight cement trials 
+                and 11 snow trials for RPHI and RPTI analysis. All retained trials exhibited clear gait 
+                patterns, with identifiable foot strikes and consistent sensor signals throughout the 
+                recording period. The cement surface was assumed to be hard and have high traction, and the 
+                snow surface was assumed to be soft and have low traction.
+            </p>
+
+            <div class="figure">
+                <img src="img/fig.1_surface_hardness.png" alt="Vertical acceleration with detected peaks on snow and cement surfaces">
+                <div class="figure-caption">
+                    Figure 1. Vertical impact with detected peaks. Higher value means higher impact. 
+                    The red dots on the cement surface exceed the threshold (12 m/s²) more consistently 
+                    and with higher magnitude than on the snow surface.
+                </div>
+            </div>
+
+            <div class="figure">
+                <img src="img/fig.2_surface_traction.png" alt="Horizontal acceleration with ground contact periods on snow and cement surfaces">
+                <div class="figure-caption">
+                    Figure 2. Horizontal slip with ground contact periods. Higher value means lower 
+                    traction. The snow surface shows substantially more horizontal acceleration variation 
+                    than the cement surface.
+                </div>
+            </div>
+
+            <table>
+                <caption>Table 1: Surface Characterization Metrics</caption>
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>Surface</th>
+                        <th>Number of Trials</th>
+                        <th>Mean±SD (m/s²)</th>
+                        <th>95% CI</th>
+                        <th>p-value</th>
+                        <th>Cohen's d</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td rowspan="2"><strong>RPHI</strong></td>
+                        <td>Hard (Cement)</td>
+                        <td>8</td>
+                        <td>15.32±5.53</td>
+                        <td>[10.69, 19.95]</td>
+                        <td rowspan="2">&lt;0.001</td>
+                        <td rowspan="2">3.66</td>
+                    </tr>
+                    <tr>
+                        <td>Soft (Snow)</td>
+                        <td>11</td>
+                        <td>1.94±1.12</td>
+                        <td>[1.19, 2.69]</td>
+                    </tr>
+                    <tr>
+                        <td rowspan="2"><strong>RPTI</strong></td>
+                        <td>Hard (Cement)</td>
+                        <td>9</td>
+                        <td>16.52±2.17</td>
+                        <td>[14.85, 18.19]</td>
+                        <td rowspan="2">&lt;0.001</td>
+                        <td rowspan="2">2.97</td>
+                    </tr>
+                    <tr>
+                        <td>Soft (Snow)</td>
+                        <td>10</td>
+                        <td>25.00±3.35</td>
+                        <td>[22.60, 27.40]</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>
+                Surface hardness discrimination through RPHI revealed striking differences between 
+                conditions. Cement surfaces generated mean vertical impact accelerations of 15.32 ± 5.53 
+                m/s² above gravitational baseline, with individual trial means ranging from 10.17 to 22.49 
+                m/s². These values indicate peak accelerations reaching approximately 2.5 times gravitational 
+                acceleration, corresponding to ground reaction forces of 2.5-3.0 times body weight. In marked 
+                contrast, snow surfaces produced dramatically attenuated impacts averaging only 1.94 ± 1.12 
+                m/s² above gravity, with trial values spanning 1.16 to 4.49 m/s². This represents an 87% 
+                reduction in impact magnitude compared to cement, approaching the theoretical minimum where 
+                vertical acceleration barely exceeds gravity.
+            </p>
+            <p>
+                The statistical comparison confirmed highly significant differences between surfaces (t = 
+                -6.74, df = 9.3, p < 0.001), with an exceptionally large effect size (Cohen's d = 3.66) far 
+                exceeding conventional thresholds for practical significance. The 95% confidence intervals 
+                showed no overlap between surface types (cement: 10.69-19.95 m/s²; snow: 1.19-2.69 m/s²), 
+                indicating robust discrimination capability.
+            </p>
+            <p>
+                Surface traction characterization through RPTI exhibited an inverse pattern to hardness 
+                measurements. Snow surfaces generated mean peak horizontal accelerations of 25.00 ± 3.35 
+                m/s² during ground contact phases, with individual trials ranging from 20.31 to 30.83 m/s². 
+                These elevated horizontal accelerations reflect the combined effects of actual foot slippage 
+                on the low-friction surface and compensatory neuromuscular adjustments to maintain stability. 
+                Cement surfaces produced significantly lower RPTI values of 16.52 ± 2.17 m/s² (range: 12.84-
+                19.03 m/s²), consistent with efficient force transfer on high-traction surfaces where minimal 
+                energy is lost to slip.
+            </p>
+            <p>
+                The 51% increase in horizontal accelerations on snow compared to cement was statistically 
+                significant (t = 6.61, df = 16.3, p < 0.001) with a very large effect size (d = 2.97). The 
+                95% confidence intervals again showed clear separation (cement: 14.85-18.19 m/s²; snow: 
+                22.60-27.40 m/s²).
+            </p>
+            <p>
+                Visual inspection of acceleration time series revealed distinct temporal patterns between 
+                surfaces. Cement trials displayed highly regular vertical acceleration peaks with consistent 
+                amplitudes and inter-strike intervals, suggesting stable gait patterns. Peak shapes were 
+                sharp and narrow, indicative of the rapid loading characteristic of rigid surface impacts. 
+                Snow trials exhibited greater variability in both peak amplitude and timing, with broader 
+                peak shapes suggesting prolonged ground contact as the foot compressed the compliant surface.
+            </p>
+        </section>
+
+        <section id="discussion">
+            <h2>Discussion</h2>
+            <p>
+                This study demonstrates that smartphones can quantify biomechanically relevant surface 
+                properties during running. The large effect sizes validate our approach while revealing 
+                distinct biomechanical adaptations to surface conditions. These findings align with and 
+                extend previous research on running surface interactions while pioneering the use of 
+                ubiquitous consumer technology for biomechanical assessment.
+            </p>
+            <p>
+                Our observed 8 times difference in vertical acceleration between cement and snow surfaces 
+                corroborates previous laboratory-based findings. Boey et al. (2017) reported 2.5 times 
+                differences in tibial acceleration between concrete and grass surfaces using research-grade 
+                accelerometers, with concrete producing peak accelerations of 8-12g compared to 3-5g on 
+                grass. Our cement values of approximately 2.5g (when converted from m/s²) appear lower due 
+                to ankle placement versus tibial mounting, as impact attenuation increases distally along 
+                the kinetic chain. The magnitude of surface-related differences, however, remains consistent 
+                with these specialized sensor studies.
+            </p>
+            <p>
+                The horizontal acceleration patterns we observed extend findings from Hollis et al. (2021), 
+                who used wearable IMUs to examine speed and surface effects. While they focused on temporal 
+                parameters and overall acceleration magnitudes, our approach specifically isolated horizontal 
+                components during ground contact to quantify traction. Their reported increase in 
+                acceleration variability on compliant surfaces aligns with our 51% higher RPTI values on 
+                snow, supporting the interpretation that low-traction surfaces demand greater neuromuscular 
+                adaptation.
+            </p>
+            <p>
+                Seshadri et al. (2019) reviewed wearable sensors for athlete monitoring but noted the 
+                absence of surface-specific metrics in commercial devices. Our smartphone-based approach 
+                directly addresses this gap, demonstrating that consumer hardware can achieve a level of 
+                discrimination capability comparable to research-grade equipment. The complementary filtering 
+                technique we employed mirrors methods used in specialized gait analysis systems, validating 
+                smartphones as legitimate biomechanical assessment tools.
+            </p>
+        </section>
+
+        <section id="conclusion">
+            <h2>Conclusion</h2>
+            <p>
+                This study validates the smartphone-based quantification of runner-surface interactions, 
+                addressing a critical gap in running analytics. The RPHI and RPTI metrics demonstrated 
+                exceptional surface discrimination (d>2.9) using consumer technology in field conditions. 
+                By transforming ubiquitous smartphones into biomechanical assessment tools, this approach 
+                democratizes access to surface-specific training insights. Integration into existing 
+                platforms could enable evidence-based optimization of the thousands of foot strikes 
+                comprising each run, balancing performance gains with injury prevention across varied 
+                terrains.
+            </p>
+        </section>
+
+        <div class="references">
+            <h2>References</h2>
+            <div class="reference-item">
+                Boey, H., Aeles, J., Schütte, K., & Vanwanseele, B. (2017). The effect of three surface 
+                conditions, speed and running experience on vertical acceleration of the tibia during 
+                running. <em>Sports biomechanics</em>, 16(2), 166-176. 
+                <a href="https://doi.org/10.1080/14763141.2016.1212918" target="_blank">
+                    https://doi.org/10.1080/14763141.2016.1212918
+                </a>
+            </div>
+            <div class="reference-item">
+                Ely, M. R., Cheuvront, S. N., Roberts, W. O., & Montain, S. J. (2007). Impact of weather 
+                on marathon-running performance. <em>Medicine & Science in Sports & Exercise</em>, 39(3), 
+                487-493. 
+                <a href="https://doi.org/10.1249/mss.0b013e31802d3aba" target="_blank">
+                    https://doi.org/10.1249/mss.0b013e31802d3aba
+                </a>
+            </div>
+            <div class="reference-item">
+                Faisal, I. A., Purboyo, T. W., & Ansori, A. S. R. (2019). A review of accelerometer sensor 
+                and gyroscope sensor in IMU sensors on motion capture. <em>J. Eng. Appl. Sci</em>, 15(3), 
+                826-829. 
+                <a href="https://doi.org/10.36478/jeasci.2020.826.829" target="_blank">
+                    https://doi.org/10.36478/jeasci.2020.826.829
+                </a>
+            </div>
+            <div class="reference-item">
+                Hollis, C. R., Koldenhoven, R. M., Resch, J. E., & Hertel, J. (2021). Running biomechanics 
+                as measured by wearable sensors: effects of speed and surface. <em>Sports biomechanics</em>. 
+                <a href="https://doi.org/10.36478/jeasci.2020.826.829" target="_blank">
+                    https://doi.org/10.36478/jeasci.2020.826.829
+                </a>
+            </div>
+            <div class="reference-item">
+                Seshadri, D. R., Li, R. T., Voos, J. E., Rowbottom, J. R., Alfes, C. M., Zorman, C. A., & 
+                Drummond, C. K. (2019). Wearable sensors for monitoring the physiological and biochemical 
+                profile of the athlete. <em>NPJ Digital Medicine</em>, 2(1), 1-16. 
+                <a href="https://doi.org/10.1080/14763141.2019.1579366" target="_blank">
+                    https://doi.org/10.1080/14763141.2019.1579366
+                </a>
+            </div>
+            <div class="reference-item">
+                Vihma, T. (2010). Effects of weather on the performance of marathon runners. 
+                <em>International Journal of Biometeorology</em>, 54(3), 297-306. 
+                <a href="https://doi.org/10.1007/s00484-009-0280-x" target="_blank">
+                    https://doi.org/10.1007/s00484-009-0280-x
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

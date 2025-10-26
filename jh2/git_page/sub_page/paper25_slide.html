@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Surface Condition Measurement for Runners - Presentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            color: #333;
+            margin: 0;
+        }
+
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            width: 100%;
+            background: white;
+            border-bottom: 1px solid #e0e0e0;
+            font-family: "Segoe UI", Roboto, Oxygen, "Helvetica Neue", Arial, sans-serif;
+        }
+
+        .top-nav {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0.75rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .site-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: #5f6368;
+        }
+
+        nav ul {
+            display: flex;
+            gap: 1.6rem;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            font-size: 0.95rem;
+        }
+
+        nav a {
+            color: #5f6368;
+            font-weight: 500;
+            text-decoration: none;
+        }
+
+        nav a:hover,
+        nav a:focus {
+            color: #3f51b5;
+            text-decoration: underline;
+        }
+
+        main {
+            flex: 1;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px 60px;
+        }
+
+        .presentation-container {
+            width: 90%;
+            max-width: 1200px;
+            height: 90vh;
+            max-height: 700px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .slide {
+            display: none;
+            flex: 1;
+            padding: 60px;
+            overflow-y: auto;
+            animation: slideIn 0.5s ease;
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Slide 1 - Title Slide */
+        .slide-1 {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .slide-1 h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.3;
+        }
+
+        .slide-1 .subtitle {
+            font-size: 28px;
+            margin-bottom: 40px;
+            opacity: 0.9;
+        }
+
+        .slide-1 .authors {
+            font-size: 22px;
+            margin-top: 40px;
+        }
+
+        .slide-1 .affiliation {
+            font-size: 18px;
+            margin-top: 15px;
+            opacity: 0.8;
+        }
+
+        /* Regular slides */
+        h2 {
+            font-size: 36px;
+            color: #667eea;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 15px;
+        }
+
+        h3 {
+            font-size: 24px;
+            color: #764ba2;
+            margin: 25px 0 15px 0;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .content-box {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+        }
+
+        .content-box h3 {
+            font-size: 20px;
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        .content-box p, .content-box ul {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        ul li {
+            margin: 10px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        ul li:before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .highlight-box h3 {
+            color: white;
+            font-size: 28px;
+            margin-bottom: 15px;
+        }
+
+        .highlight-box p {
+            font-size: 20px;
+            line-height: 1.6;
+        }
+
+        .metric-display {
+            display: flex;
+            justify-content: space-around;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+
+        .metric-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            min-width: 250px;
+            margin: 10px;
+            border-top: 5px solid #667eea;
+        }
+
+        .metric-card h4 {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .metric-card .value {
+            font-size: 42px;
+            font-weight: 700;
+            color: #667eea;
+            margin: 15px 0;
+        }
+
+        .metric-card .label {
+            font-size: 16px;
+            color: #888;
+        }
+
+        .formula {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 18px;
+            margin: 15px 0;
+            text-align: center;
+            border-left: 4px solid #764ba2;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .comparison-box {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .comparison-box.cement {
+            border: 3px solid #ff6b6b;
+        }
+
+        .comparison-box.snow {
+            border: 3px solid #4ecdc4;
+        }
+
+        .comparison-box h4 {
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+
+        .comparison-box .value {
+            font-size: 36px;
+            font-weight: 700;
+            margin: 20px 0;
+        }
+
+        .cement .value {
+            color: #ff6b6b;
+        }
+
+        .snow .value {
+            color: #4ecdc4;
+        }
+
+        /* Navigation */
+        .nav-container {
+            background: #f8f9fa;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .nav-button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .nav-button:hover:not(:disabled) {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .nav-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .slide-counter {
+            font-size: 16px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: #e0e0e0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .presentation-container {
+                width: 95%;
+                height: 95vh;
+            }
+
+            .slide {
+                padding: 30px 20px;
+            }
+
+            .slide-1 h1 {
+                font-size: 32px;
+            }
+
+            .slide-1 .subtitle {
+                font-size: 20px;
+            }
+
+            h2 {
+                font-size: 28px;
+            }
+
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-container {
+                padding: 15px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="site-header">
+        <div class="top-nav">
+            <div class="site-title">Junho Oh</div>
+            <nav>
+                <ul>
+                    <li><a href="../index.html#about">About</a></li>
+                    <li><a href="../index.html#meistsingers">Meistsingers</a></li>
+                    <li><a href="../index.html#cross-country">Cross Country</a></li>
+                    <li><a href="../index.html#science-research">Science Research</a></li>
+                    <li><a href="../index.html#philosophy-club">Philosophy Club</a></li>
+                    <li><a href="../index.html#summer-intern">Summer Intern</a></li>
+                    <li><a href="../index.html#leadership-program">Leadership Program</a></li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+    <main>
+        <div class="presentation-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+
+        <!-- Slide 1: Title -->
+        <div class="slide slide-1 active">
+            <h1>Surface Condition Measurement<br>for Runners Using Smartphone Sensors</h1>
+            <div class="subtitle">Quantifying Runner-Surface Interactions</div>
+            <div class="authors">Junho Oh, Jaeyoung Oh</div>
+            <div class="affiliation">University of Colorado Denver, University of Colorado Boulder</div>
+            <div class="affiliation" style="margin-top: 40px; font-size: 24px;">2025</div>
+        </div>
+
+        <!-- Slide 2: Background & Motivation -->
+        <div class="slide">
+            <h2>Background & Motivation</h2>
+            <div class="highlight-box">
+                <h3>Current Gap</h3>
+                <p>Modern running platforms track atmospheric conditions but cannot quantify surface properties that directly affect biomechanics, energy expenditure, and injury risk</p>
+            </div>
+            <div class="content-grid">
+                <div class="content-box">
+                    <h3>Surface Hardness</h3>
+                    <p>Impact force magnitude and energy return</p>
+                </div>
+                <div class="content-box">
+                    <h3>Surface Traction</h3>
+                    <p>Propulsion efficiency and stability demands</p>
+                </div>
+                <div class="content-box">
+                    <h3>📱 Opportunity</h3>
+                    <p>Smartphones with IMU sensors can capture gait dynamics</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Study Design -->
+        <div class="slide">
+            <h2>Methods: Study Design</h2>
+            <div class="content-grid">
+                <div class="content-box">
+                    <h3>Participants</h3>
+                    <ul>
+                        <li>2 recreational runners (males)</li>
+                        <li>≥20 km/week running volume</li>
+                        <li>No recent lower extremity injuries</li>
+                        <li>Ages: 17 and 50 years</li>
+                    </ul>
+                </div>
+                <div class="content-box">
+                    <h3>Equipment</h3>
+                    <ul>
+                        <li>iPhone 14 IMU</li>
+                        <li>Tri-axial accelerometer</li>
+                        <li>Tri-axial gyroscope</li>
+                        <li>100Hz sampling rate</li>
+                        <li>Ankle-mounted</li>
+                    </ul>
+                </div>
+                <div class="content-box">
+                    <h3>Surfaces Tested</h3>
+                    <ul>
+                        <li><strong>Cement:</strong> Level concrete pathway</li>
+                        <li><strong>Snow:</strong> 1-10 cm fresh snow cover</li>
+                    </ul>
+                </div>
+                <div class="content-box">
+                    <h3>Environment</h3>
+                    <ul>
+                        <li>Temperature: 2-5°C</li>
+                        <li>No active precipitation</li>
+                        <li>Minimal wind</li>
+                        <li>10 trials per surface</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: IMU Sensors -->
+        <div class="slide">
+            <h2>Understanding IMU Sensors</h2>
+            <div class="highlight-box">
+                <h3>What is IMU?</h3>
+                <p>Inertial Measurement Unit - an electronic sensor inside a smartphone that measures motion</p>
+            </div>
+            <div class="two-column">
+                <div class="content-box">
+                    <h3>📊 Accelerometer</h3>
+                    <p>Measures linear acceleration by detecting changes in speed and the force of gravity</p>
+                    <ul style="margin-top: 15px;">
+                        <li>3-axis measurement (X, Y, Z)</li>
+                        <li>Detects foot strikes</li>
+                        <li>Captures impact forces</li>
+                    </ul>
+                </div>
+                <div class="content-box">
+                    <h3>🔄 Gyroscope</h3>
+                    <p>Measures angular velocity - how fast an object is spinning or rotating</p>
+                    <ul style="margin-top: 15px;">
+                        <li>Tracks device orientation</li>
+                        <li>Corrects for rotation</li>
+                        <li>Enables frame transformation</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Data Processing Methods -->
+        <div class="slide">
+            <h2>Methods: Data Processing</h2>
+            <div class="content-box" style="margin-bottom: 20px;">
+                <h3>Complementary Filter for Orientation</h3>
+                <p>Transforms device accelerations to Earth reference frame</p>
+                <div class="formula">
+                    θ(t) = α(θ(t-1) + ω·dt) + (1 − α)θ<sub>acc</sub>&nbsp;&nbsp;&nbsp;(α = 0.98)
+                </div>
+            </div>
+            <div class="two-column">
+                <div class="content-box">
+                    <h3>RPHI</h3>
+                    <p><strong>Runner-Perceived Hardness Index</strong></p>
+                    <p style="margin-top: 10px;">Metric: Mean net vertical acceleration</p>
+                    <div class="formula" style="font-size: 16px;">
+                        Σ(peak_vert_acc - 9.81) / n
+                    </div>
+                    <p style="margin-top: 10px; font-size: 14px;">Higher values = Harder surface</p>
+                </div>
+                <div class="content-box">
+                    <h3>RPTI</h3>
+                    <p><strong>Runner-Perceived Traction Index</strong></p>
+                    <p style="margin-top: 10px;">Metric: Mean peak horizontal acceleration</p>
+                    <div class="formula" style="font-size: 16px;">
+                        Σ(max|horiz_acc|) / n
+                    </div>
+                    <p style="margin-top: 10px; font-size: 14px;">Higher values = Lower traction</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Processing Pipeline -->
+        <div class="slide">
+            <h2>Data Processing Pipeline</h2>
+            <div style="margin-top: 30px;">
+                <div class="content-box" style="margin-bottom: 20px;">
+                    <h3>1. Raw IMU Data</h3>
+                    <p>3-axis accelerometer & gyroscope readings at 100Hz</p>
+                </div>
+                <div style="text-align: center; font-size: 30px; margin: 20px 0; color: #667eea;">↓</div>
+                <div class="content-box" style="margin-bottom: 20px;">
+                    <h3>2. Complementary Filter</h3>
+                    <p>Fuse accelerometer & gyroscope data, remove gravity component</p>
+                </div>
+                <div style="text-align: center; font-size: 30px; margin: 20px 0; color: #667eea;">↓</div>
+                <div class="content-box" style="margin-bottom: 20px;">
+                    <h3>3. Step Detection</h3>
+                    <p>Peak detection algorithm to identify ground contact events</p>
+                </div>
+                <div style="text-align: center; font-size: 30px; margin: 20px 0; color: #667eea;">↓</div>
+                <div class="content-box">
+                    <h3>4. Metric Calculation</h3>
+                    <p>Derive RPHI (hardness) & RPTI (traction) values</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Results - Hardness -->
+        <div class="slide">
+            <h2>Results: Surface Hardness (RPHI)</h2>
+            <div class="highlight-box">
+                <p style="font-size: 18px; margin-bottom: 20px;">Runner-Perceived Hardness Index measures impact forces</p>
+            </div>
+            <div class="metric-display">
+                <div class="comparison-box cement">
+                    <h4>Cement (Hard Surface)</h4>
+                    <div class="value">15.32 m/s²</div>
+                    <div class="label">±5.53 m/s²</div>
+                    <p style="margin-top: 15px; font-size: 14px;">Higher impact forces<br>More energy return</p>
+                </div>
+                <div class="comparison-box snow">
+                    <h4>Snow (Soft Surface)</h4>
+                    <div class="value">1.94 m/s²</div>
+                    <div class="label">±1.12 m/s²</div>
+                    <p style="margin-top: 15px; font-size: 14px;">87% reduction<br>Better shock absorption</p>
+                </div>
+            </div>
+            <div class="content-box" style="margin-top: 30px; text-align: center;">
+                <p><strong>Statistical significance:</strong> p < 0.001, Cohen's d = 3.66 (very large effect)</p>
+            </div>
+        </div>
+
+        <!-- Slide 8: Results - Traction -->
+        <div class="slide">
+            <h2>Results: Surface Traction (RPTI)</h2>
+            <div class="highlight-box">
+                <p style="font-size: 18px; margin-bottom: 20px;">Runner-Perceived Traction Index measures horizontal slip</p>
+            </div>
+            <div class="metric-display">
+                <div class="comparison-box cement">
+                    <h4>Cement (High Traction)</h4>
+                    <div class="value">16.52 m/s²</div>
+                    <div class="label">±2.17 m/s²</div>
+                    <p style="margin-top: 15px; font-size: 14px;">Efficient force transfer<br>Minimal slippage</p>
+                </div>
+                <div class="comparison-box snow">
+                    <h4>Snow (Low Traction)</h4>
+                    <div class="value">25.00 m/s²</div>
+                    <div class="label">±3.35 m/s²</div>
+                    <p style="margin-top: 15px; font-size: 14px;">51% higher<br>Requires compensation</p>
+                </div>
+            </div>
+            <div class="content-box" style="margin-top: 30px; text-align: center;">
+                <p><strong>Statistical significance:</strong> p < 0.001, Cohen's d = 2.97 (very large effect)</p>
+            </div>
+        </div>
+
+        <!-- Slide 9: Discussion -->
+        <div class="slide">
+            <h2>Discussion</h2>
+            <div class="content-box" style="margin-bottom: 25px;">
+                <h3>Key Findings</h3>
+                <ul>
+                    <li>Consumer smartphones can distinguish surface types with very large effect sizes</li>
+                    <li>Results corroborate laboratory-based findings using field methods</li>
+                    <li>Demonstrates feasibility of real-time biomechanical assessment</li>
+                </ul>
+            </div>
+            <div class="two-column">
+                <div class="content-box">
+                    <h3>Comparison with Literature</h3>
+                    <ul>
+                        <li><strong>Boey et al.:</strong> 2.5× differences (concrete vs. grass)</li>
+                        <li><strong>Our study:</strong> 8× difference (cement vs. snow)</li>
+                        <li>Confirms surface effects across measurement methods</li>
+                    </ul>
+                </div>
+                <div class="content-box">
+                    <h3>Limitations</h3>
+                    <ul>
+                        <li>Small sample size (n=2)</li>
+                        <li>Limited surface types tested</li>
+                        <li>Sensor placement variability</li>
+                        <li>Need for threshold calibration</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Conclusion -->
+        <div class="slide">
+            <h2>Conclusion & Future Directions</h2>
+            <div class="highlight-box" style="margin-bottom: 30px;">
+                <h3>Main Conclusion</h3>
+                <p>Smartphones enable real-time surface assessment previously limited to laboratory settings</p>
+            </div>
+            <div class="content-grid">
+                <div class="content-box">
+                    <h3>Clinical Impact</h3>
+                    <ul>
+                        <li>Training optimization</li>
+                        <li>Injury prevention</li>
+                        <li>Footwear recommendations</li>
+                        <li>Route planning</li>
+                    </ul>
+                </div>
+                <div class="content-box">
+                    <h3>Future Work</h3>
+                    <ul>
+                        <li>Larger participant cohorts</li>
+                        <li>More surface types</li>
+                        <li>Platform integration (Strava, Garmin)</li>
+                        <li>Real-time feedback systems</li>
+                    </ul>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 50px;">
+                <h3 style="font-size: 36px; color: #667eea;">Thank You!</h3>
+                <p style="font-size: 18px; margin-top: 15px; color: #666;">Questions?</p>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav-container">
+            <button class="nav-button" id="prevBtn" onclick="changeSlide(-1)">← Previous</button>
+            <div class="slide-counter">
+                <span id="currentSlide">1</span> / <span id="totalSlides">10</span>
+            </div>
+            <button class="nav-button" id="nextBtn" onclick="changeSlide(1)">Next →</button>
+        </div>
+        </div>
+    </main>
+
+    <script>
+        let currentSlide = 1;
+        const totalSlides = 10;
+
+        function showSlide(n) {
+            const slides = document.querySelectorAll('.slide');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const progressFill = document.getElementById('progressFill');
+            
+            if (n > totalSlides) currentSlide = totalSlides;
+            if (n < 1) currentSlide = 1;
+            else currentSlide = n;
+            
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active');
+                if (index === currentSlide - 1) {
+                    slide.classList.add('active');
+                }
+            });
+            
+            document.getElementById('currentSlide').textContent = currentSlide;
+            
+            // Update buttons
+            prevBtn.disabled = currentSlide === 1;
+            nextBtn.disabled = currentSlide === totalSlides;
+            
+            // Update progress bar
+            const progress = ((currentSlide - 1) / (totalSlides - 1)) * 100;
+            progressFill.style.width = progress + '%';
+        }
+
+        function changeSlide(direction) {
+            showSlide(currentSlide + direction);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight') changeSlide(1);
+        });
+
+        // Initialize
+        document.getElementById('totalSlides').textContent = totalSlides;
+        showSlide(1);
+    </script>
+</body>
+</html>

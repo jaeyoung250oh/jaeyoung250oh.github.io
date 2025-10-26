@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Junho | Personal Site</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --text-color: #202124;
+      --muted-text: #5f6368;
+      --accent: #3f51b5;
+      --border-color: #e0e0e0;
+      --background: #fafafa;
+      --sidebar-width: 280px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Roboto, Oxygen, "Helvetica Neue", Arial, sans-serif;
+      color: var(--text-color);
+      background: white;
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover,
+    a:focus {
+      text-decoration: underline;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: white;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .top-nav {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0.75rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .site-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--muted-text);
+    }
+
+    nav ul {
+      display: flex;
+      gap: 1.6rem;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      font-size: 0.95rem;
+    }
+
+    nav a {
+      color: var(--muted-text);
+      font-weight: 500;
+    }
+
+    nav a:hover,
+    nav a:focus {
+      color: var(--accent);
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      gap: 2.5rem;
+      grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+      padding: 3rem 2rem;
+    }
+
+    aside {
+      position: sticky;
+      top: 5.5rem;
+      align-self: start;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      background: var(--background);
+      padding: 2rem 1.5rem;
+    }
+
+    .profile-photo {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: var(--border-color);
+      display: block;
+      margin: 0 auto 1.5rem;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .sidebar-name {
+      font-size: 1.1rem;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .sidebar-tagline {
+      font-size: 0.9rem;
+      text-align: center;
+      color: var(--muted-text);
+      margin-bottom: 1.5rem;
+    }
+
+    .sidebar-links {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: grid;
+      gap: 0.75rem;
+      font-size: 0.9rem;
+    }
+
+    .sidebar-links li {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      color: var(--muted-text);
+    }
+
+    .sidebar-links span {
+      color: var(--muted-text);
+    }
+
+    section {
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 2rem;
+      background: white;
+      box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+    }
+
+    section:not(:last-of-type) {
+      margin-bottom: 1.5rem;
+    }
+
+    section h1,
+    section h2,
+    section h3 {
+      color: #1a237e;
+      margin-top: 0;
+      letter-spacing: 0.02em;
+    }
+
+    section h1 {
+      font-size: 1.9rem;
+      margin-bottom: 1rem;
+    }
+
+    section h2 {
+      font-size: 1.4rem;
+      margin-top: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    section h3 {
+      font-size: 1.1rem;
+      margin-bottom: 0.6rem;
+    }
+
+    p {
+      margin: 0 0 1rem;
+    }
+
+    .media-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.2rem;
+      margin-top: 1rem;
+    }
+
+    .media-card {
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 1rem;
+      background: var(--background);
+    }
+
+    .media-card h4 {
+      margin: 0 0 0.5rem;
+      font-size: 1rem;
+      color: var(--text-color);
+    }
+
+    .media-card p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: var(--muted-text);
+    }
+
+    .placeholder-media {
+      width: 100%;
+      border-radius: 4px;
+      margin-bottom: 0.75rem;
+      object-fit: cover;
+    }
+
+    .note {
+      font-size: 0.85rem;
+      color: var(--muted-text);
+    }
+
+    @media (max-width: 960px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+
+      aside {
+        position: static;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .top-nav {
+        flex-direction: column;
+        gap: 0.75rem;
+        padding: 1rem;
+      }
+
+      nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+      }
+
+      section {
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="top-nav">
+      <div class="site-title">Junho Oh</div>
+      <nav>
+        <ul>
+          <li><a href="#about">About</a></li>
+          <li><a href="#meistsingers">Meistsingers</a></li>
+          <li><a href="#cross-country">Cross Country</a></li>
+          <li><a href="#science-research">Science Research</a></li>
+          <li><a href="#philosophy-club">Philosophy Club</a></li>
+          <li><a href="#summer-intern">Summer Intern</a></li>
+          <li><a href="#leadership-program">Leadership Program</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <aside>
+      <img class="profile-photo" src="img/Junho_profile.png" alt="Junho Oh portrait">
+      <div class="sidebar-name">Junho Oh</div>
+      <div class="sidebar-tagline">Student · Explorer · Collaborator</div>
+      <ul class="sidebar-links">
+        <li><span>📍</span>Centennial, CO</li>
+        <!-- <li><span>✉️</span><a href="mailto:junho@example.com">junho@example.com</a></li> -->
+        <!-- <li><span>🔗</span><a href="https://github.com/junho" target="_blank" rel="noopener">GitHub</a></li> -->
+        <li><span>📝</span><a href="#about">Read my story</a></li>
+      </ul>
+    </aside>
+
+    <div>
+      <section id="about">
+        <h1>About Me</h1>
+        <p>
+          I am a high school student with a curious mind and a love for connecting ideas across art, science, and community building.
+          I created this space to share the projects and experiences that shape who I am becoming: a committed teammate, a thoughtful researcher, and an engaged citizen.
+        </p>
+        <p>
+          My interests include vocal performance with the Meistsingers, competitive cross country, local science initiatives, philosophical inquiry, and summer programs that stretch my leadership skills.
+        </p>
+        <p>
+          Each section of this site highlights the people, places, and lessons that have inspired me.
+          I hope it offers a glimpse of why I care deeply about collaboration, perseverance, and curiosity.
+        </p>
+      </section>
+
+      <section id="meistsingers">
+        <h2>Meistsingers</h2>
+        <p>
+          Performing with the Meistsingers has taught me how teamwork and trust can transform music into something unforgettable.
+          Below are highlights that capture the spirit of our ensemble.
+        </p>
+        <div class="media-grid">
+          <div class="media-card">
+            <img class="placeholder-media" src="https://via.placeholder.com/400x250.png?text=Concert+Photo" alt="Meistsingers performance">
+            <h4>Concert Photo</h4>
+            <p>Our winter concert finale, where we debuted a new arrangement blending classical and contemporary harmonies.</p>
+          </div>
+          <div class="media-card">
+            <img class="placeholder-media" src="https://via.placeholder.com/400x250.png?text=Rehearsal+Clip" alt="Meistsingers rehearsal video frame">
+            <h4>Video Highlight</h4>
+            <p>Short video recap that documents the energy from our regional competition set.</p>
+          </div>
+        </div>
+        <p class="note">Replace the placeholder images with your own photos or embedded videos when ready.</p>
+      </section>
+
+      <section id="cross-country">
+        <h2>Cross Country</h2>
+        <h3>Photos</h3>
+        <p>
+          Running has taught me resilience and how to pace myself through challenges. These photos track our season from sunrise practices to championship meets.
+        </p>
+        <div class="media-grid">
+          <div class="media-card">
+            <img class="placeholder-media" src="img/xc_run1.jpg" alt="Cross country team huddle">
+            <h4>Team Huddle</h4>
+            <p>The pre-race ritual that keeps our team grounded and focused before the starting gun.</p>
+          </div>
+          <div class="media-card">
+            <img class="placeholder-media" src="img/xc_run2.jpg" alt="Arizona trail">
+            <h4>Arizona Trail</h4>
+            <p>Route snapshot from our training camp in Arizona, where altitude and heat pushed us to new levels.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="science-research">
+        <h2>Science Research</h2>
+        <h3>Paper</h3>
+        <p>
+          I am exploring how environmental data can support more resilient neighborhoods.
+          My recent paper examines heat islands and proposes community-led monitoring strategies.
+          <a href="sub_page/paper25_slide.html">View the slides.</a> </p>
+          <a href="sub_page/paper25.html">Read the full paper.</a>
+        </p>
+        <h3>Drone Sensing</h3>
+        <p>
+          I am exploring how environmental data can support more resilient neighborhoods.
+          My recent paper examines heat islands and proposes community-led monitoring strategies.
+          <a href="sub_page/drone.html">Read the drone sensing research.</a>
+        </p>
+        <h3>Community Map</h3>
+        <p>
+          The community map project overlays temperature data, green space access, and volunteer initiatives to recommend cooling interventions.
+          It is an ongoing collaboration with local organizations.</p>
+          <a href="walking_map/index.html">Goto the community map.</a>
+        </p>
+        <div class="media-grid">
+          <div class="media-card">
+            <img class="placeholder-media" src="img/isbs2025.jpg" alt="Research paper draft">
+            <h4>Research Draft</h4>
+            <p>Working draft of my paper with annotated feedback from mentors and peers.</p>
+          </div>
+          <div class="media-card">
+            <img class="placeholder-media" src="img/community_map.jpg" alt="Community map visualization">
+            <h4>Community Map</h4>
+            <p>Interactive prototype showcasing temperature readings and recommended cooling centers.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="philosophy-club">
+        <h2>Philosophy Club</h2>
+        <h3>Photo</h3>
+        <p>
+          Our weekly gatherings bring students together to wrestle with big questions about ethics, identity, and meaning.
+          The club photo captures the welcoming atmosphere we strive to cultivate.
+        </p>
+        <h3>Presentation</h3>
+        <p>
+          My latest presentation explored how stoic philosophy can inform modern civic engagement. It sparked a lively debate that carried on long after the meeting ended.
+        </p>
+        <div class="media-grid">
+          <div class="media-card">
+            <img class="placeholder-media" src="https://via.placeholder.com/400x250.png?text=Club+Photo" alt="Philosophy club group photo">
+            <h4>Club Photo</h4>
+            <p>Snapshot from our fall symposium featuring guest speakers and student-led panels.</p>
+          </div>
+          <div class="media-card">
+            <img class="placeholder-media" src="https://via.placeholder.com/400x250.png?text=Presentation+Slides" alt="Philosophy presentation slides">
+            <h4>Presentation Slides</h4>
+            <p>Slide deck summary of my talk on stoicism and civic leadership.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="summer-intern">
+        <h2>Summer Intern</h2>
+        <p>
+          During my summer internship with a local sustainability nonprofit, I helped analyze energy usage patterns and wrote outreach materials that encouraged residents to adopt green practices.
+          The experience reinforced my commitment to combining research with action.
+        </p>
+        <div class="media-grid">
+          <div class="media-card">
+            <img class="placeholder-media" src="https://via.placeholder.com/400x250.png?text=Internship+Snapshot" alt="Internship workspace">
+            <h4>Workspace Photo</h4>
+            <p>Sketched workflows from our weekly standups, where we coordinated data analysis and community events.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="leadership-program">
+        <h2>Summer Leadership Program</h2>
+        <p>
+          The summer leadership program challenged me to become a more empathetic listener and decisive organizer.
+          Through team design sprints and mentorship sessions, I found my voice and learned how to guide group discussions productively.
+        </p>
+        <div class="media-grid">
+          <div class="media-card">
+            <img class="placeholder-media" src="https://via.placeholder.com/400x250.png?text=Leadership+Retreat" alt="Leadership program retreat photo">
+            <h4>Retreat Photo</h4>
+            <p>Group reflection at the leadership retreat, where we created action plans for our school communities.</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+</body>
+</html>
