@@ -17,7 +17,7 @@ jobs:
       - name: Prepare site
         run: |
           mkdir -p dist
-          cp frontend_demo_fixed.html dist/index.html
+          cp index.html dist/index.html
           sed -i 's/__GOOGLE_MAPS_API_KEY__/'"$GOOGLE_MAPS_API_KEY"'/g' dist/index.html
         env:
           GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
