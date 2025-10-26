@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Map with Environmental Data</title>
+    <style>
+        #map { height: 100%; }
+        html, body { height: 100%; margin: 0; padding: 0; }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+
+    <script>
+        let map;
+
+        function initMap() {
+            const denver = { lat: 39.7392, lng: -104.9903 };
+            
+            map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 12,
+                center: denver,
+            });
+
+            map.addListener('click', async (event) => {
+                const lat = event.latLng.lat();
+                const lng = event.latLng.lng();
+                
+                console.log("Map clicked at:", lat, lng); // DEBUG: Check if click is registered
+
+                const airQualityData = await getAirQuality(lat, lng);
+
+                if (airQualityData && airQualityData.indexes && airQualityData.indexes.length > 0) {
+                    console.log("SUCCESS: Received Air Quality data:", airQualityData); // DEBUG: See the data
+                    const aqi = airQualityData.indexes[0].aqi;
+                    const category = airQualityData.indexes[0].category;
+                    const contentString = `<div><strong>Air Quality</strong><br>AQI: ${aqi} (${category})</div>`;
+
+                    const infoWindow = new google.maps.InfoWindow({
+                        content: contentString,
+                        position: event.latLng,
+                    });
+                    infoWindow.open(map);
+                } else {
+                    // This will now show a message if the data is missing or malformed
+                    const infoWindow = new google.maps.InfoWindow({
+                        content: "Could not retrieve air quality data for this location.",
+                        position: event.latLng,
+                    });
+                    infoWindow.open(map);
+                }
+            });
+        }
+
+        async function getAirQuality(lat, lng) {
+            console.log("Requesting Air Quality data..."); // DEBUG: Check if function is called
+            const apiKey = ''; // IMPORTANT: Replace with your key
+            const endpoint = 'https://airquality.googleapis.com/v1/currentConditions:lookup';
+
+            try {
+                const response = await fetch(endpoint + `?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        location: { latitude: lat, longitude: lng }
+                    })
+                });
+
+                if (!response.ok) {
+                    // This will log detailed error information from the API
+                    const errorBody = await response.json();
+                    console.error('API Error Response:', errorBody);
+                    throw new Error(`Network response was not ok: ${response.statusText}`);
+                }
+                
+                return await response.json();
+            } catch (error) {
+                console.error("CRITICAL: Failed to fetch air quality data.", error);
+                return null;
+            }
+        }
+    </script>
+    
+    <script async
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA6XveRlujUXFnliyDuA2bU8nVoC4R1pzs&callback=initMap&v=weekly">
+    </script>
+</body>
+</html>
